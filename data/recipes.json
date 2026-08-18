@@ -1,0 +1,54 @@
+{
+  "categories": {
+    "Ontbijt":      { "color": "#C08A2E" },
+    "Hapjes":       { "color": "#B5562C" },
+    "Drank":        { "color": "#2E5C6E" },
+    "Voorgerecht":  { "color": "#5B8C5A" },
+    "Hoofdgerecht": { "color": "#8B2635" },
+    "Dessert":      { "color": "#7A3B5C" }
+  },
+  "recipes": [
+    {
+      "id": "H01",
+      "slug": "preischotel-blauwe-kaas-walnoten",
+      "category": "Hoofdgerecht",
+      "title": "Preischotel met blauwe kaas en walnoten",
+      "description": "Een romige ovenschotel waarbij de zachte, gekarameliseerde prei perfect in balans is met de pittige blauwe kaas. De walnoten zorgen voor een krokante tegenhanger.",
+      "meta": {
+        "bereidingstijd": "45 min",
+        "oventijd": "30 min",
+        "porties": "4 personen",
+        "moeilijkheid": "Makkelijk"
+      },
+      "ingredients": [
+        { "amount": "4 stuks", "naam": "preistengels (enkel het wit en lichtgroen)" },
+        { "amount": "150 g", "naam": "blauwe kaas (Roquefort, Gorgonzola of Belgische Pas de Bleu)" },
+        { "amount": "200 ml", "naam": "volle room" },
+        { "amount": "100 ml", "naam": "crème fraîche" },
+        { "amount": "2 stuks", "naam": "eieren" },
+        { "amount": "60 g", "naam": "walnoten, grof gehakt" },
+        { "amount": "20 g", "naam": "boter" },
+        { "amount": "1 el", "naam": "olijfolie" },
+        { "amount": "60 ml", "naam": "droge witte wijn" },
+        { "amount": "30 g", "naam": "geraspte Parmezaan" },
+        { "amount": "1 snuif", "naam": "nootmuskaat" },
+        { "amount": "–", "naam": "zout en versgemalen peper" }
+      ],
+      "stappen": [
+        { "titel": "Oven voorverwarmen", "tekst": "Verwarm de oven voor op 180 °C (hetelucht) of 200 °C (conventioneel). Vet een ovenschaal van ca. 20 × 28 cm in met een beetje boter." },
+        { "titel": "Prei snijden en wassen", "tekst": "Snijd de prei in ringen van ongeveer 2 cm. Spoel grondig onder koud water en laat uitlekken. Prei houdt vaak zand vast tussen de lagen — goed wassen is cruciaal." },
+        { "titel": "Prei stoven", "tekst": "Verhit de boter en olijfolie in een brede pan op middelhoog vuur. Voeg de prei toe en stoof zachtjes gedurende 5 minuten. Blus af met de witte wijn en laat de wijn volledig inkoken. Breng op smaak met zout en peper. De prei moet zacht zijn maar nog licht van kleur." },
+        { "titel": "Roomsaus bereiden", "tekst": "Kluts de eieren los in een kom. Voeg de room en crème fraîche toe en roer glad. Verkruimel 2/3 van de blauwe kaas in de saus en breng op smaak met nootmuskaat en eventueel extra peper. Zout spaarzaam: blauwe kaas is al zout van zichzelf." },
+        { "titel": "Schotel samenstellen", "tekst": "Verdeel de gestoofde prei gelijkmatig over de ingevette ovenschaal. Giet de roomsaus erover. Verdeel de resterende blauwe kaas in stukjes over het oppervlak. Bestrooi met de walnoten en eindig met de Parmezaan." },
+        { "titel": "Bakken en rusten", "tekst": "Zet de schotel in het midden van de oven en bak gedurende 25–30 minuten, tot de bovenkant goudbruin en licht gebubbeleerd is. Laat 5 minuten rusten voor het serveren." }
+      ],
+      "tips": [
+        { "label": "Kaas", "tekst": "Roquefort = meest uitgesproken; Gorgonzola dolce = milder; Pas de Bleu = goede Belgische keuze." },
+        { "label": "Prei", "tekst": "Zomerbreedprei (nu in seizoen) is fijner en zoeter dan winterprei — werkt minstens even goed." },
+        { "label": "Wijn", "tekst": "Alcohol weglaten? Vervang door groentebouillon met een kneepje citroensap." },
+        { "label": "Serveren", "tekst": "Lekker met groene salade en knapperig brood. Als bijgerecht bij gegrilde kip of varkensfilet." },
+        { "label": "Vegan", "tekst": "Vervang room door kokosroom, gebruik vegan blauwe kaas en een eetlepel maïszetmeel als binder." }
+      ]
+    }
+  ]
+}

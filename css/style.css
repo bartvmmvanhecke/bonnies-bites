@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1B1815;
+  --paper:#F7F4EC;
+  --paper-dim:#EDE8DC;
+  --line:#D8D2C2;
+  --accent:#8B2635; /* overridden per-category via inline style */
+}
+
+*{box-sizing:border-box;}
+html{-webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  line-height:1.5;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important; transition:none!important;}
+}
+a{color:inherit;}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px;}
+
+.wrap{max-width:1040px; margin:0 auto; padding:0 1.5rem;}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding:1.5rem 0; border-bottom:2px solid var(--ink);
+}
+.wordmark{
+  font-family:'Fraunces', serif; font-weight:900; font-size:1.6rem;
+  text-transform:lowercase; letter-spacing:-0.01em;
+}
+.wordmark a{text-decoration:none;}
+.topbar .tag{
+  font-family:'IBM Plex Mono', monospace; font-size:.75rem;
+  letter-spacing:.08em; text-transform:uppercase; opacity:.6;
+}
+
+/* ---------- Index hero ---------- */
+.hero{padding:3.5rem 0 2rem; border-bottom:1px solid var(--line);}
+.hero h1{
+  font-family:'Fraunces', serif; font-weight:900; font-size:clamp(2.4rem,7vw,4.2rem);
+  text-transform:lowercase; line-height:.95; margin:0 0 .6rem; letter-spacing:-0.02em;
+}
+.hero p{max-width:34rem; opacity:.75; margin:0;}
+
+/* ---------- Category groups ---------- */
+.category-block{padding:2.2rem 0;}
+.category-head{
+  display:flex; align-items:center; gap:.75rem; margin-bottom:1rem;
+}
+.category-dot{width:.7rem; height:.7rem; border-radius:50%; background:var(--dot);}
+.category-head h2{
+  font-family:'Fraunces', serif; font-weight:600; font-size:1.3rem;
+  text-transform:lowercase; margin:0;
+}
+.category-count{
+  font-family:'IBM Plex Mono', monospace; font-size:.7rem; opacity:.5;
+}
+
+.recipe-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+}
+.recipe-card{
+  background:var(--paper); padding:1.4rem; text-decoration:none; color:var(--ink);
+  display:flex; flex-direction:column; gap:.5rem; min-height:9rem;
+  transition:background .15s ease;
+}
+.recipe-card:hover{background:var(--paper-dim);}
+.recipe-card .num{
+  font-family:'IBM Plex Mono', monospace; font-size:.7rem; color:var(--accent-card);
+}
+.recipe-card h3{
+  font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem;
+  text-transform:lowercase; margin:0; line-height:1.15;
+}
+.recipe-card .desc{font-size:.85rem; opacity:.65; margin:0;}
+
+.empty-cat{opacity:.4; font-size:.85rem; font-style:italic;}
+
+/* ---------- Recipe detail: title panel ---------- */
+.title-panel{
+  display:grid; grid-template-columns:1fr 1fr; min-height:280px;
+  border-bottom:2px solid var(--ink);
+}
+@media (max-width:700px){ .title-panel{grid-template-columns:1fr;} }
+.title-panel .colorblock{
+  background:var(--accent); color:var(--paper);
+  padding:2.4rem 2rem; display:flex; flex-direction:column; justify-content:space-between;
+}
+.title-panel .id{font-family:'IBM Plex Mono', monospace; font-size:.8rem; letter-spacing:.1em;}
+.title-panel .cat{font-family:'IBM Plex Mono', monospace; font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; opacity:.85;}
+.title-panel .textblock{
+  padding:2.4rem 2rem; display:flex; flex-direction:column; justify-content:center;
+}
+.title-panel h1{
+  font-family:'Fraunces', serif; font-weight:900; font-size:clamp(1.8rem,4.5vw,2.6rem);
+  text-transform:lowercase; line-height:1; margin:0 0 .9rem; letter-spacing:-0.01em;
+}
+.title-panel .description{font-size:.95rem; opacity:.75; margin:0;}
+
+/* ---------- Meta strip ---------- */
+.meta-strip{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--line);
+}
+.meta-strip div{padding:1rem 1.5rem; border-right:1px solid var(--line);}
+.meta-strip div:last-child{border-right:none;}
+.meta-strip .label{font-family:'IBM Plex Mono', monospace; font-size:.65rem; text-transform:uppercase; letter-spacing:.08em; opacity:.5;}
+.meta-strip .val{font-weight:500; margin-top:.15rem;}
+@media (max-width:600px){ .meta-strip{grid-template-columns:1fr 1fr;} }
+
+/* ---------- Sections ---------- */
+section.block{padding:2.5rem 0; border-bottom:1px solid var(--line);}
+section.block h2{
+  font-family:'Fraunces', serif; font-weight:600; font-size:1.4rem;
+  text-transform:lowercase; margin:0 0 1.2rem;
+}
+
+table.ingredients{width:100%; border-collapse:collapse; font-size:.95rem;}
+table.ingredients tr:nth-child(odd){background:var(--paper-dim);}
+table.ingredients td{padding:.55rem .8rem;}
+table.ingredients td:first-child{width:8rem; font-weight:500; color:var(--accent);}
+
+.steps{display:grid; gap:1.4rem;}
+.step{display:grid; grid-template-columns:2.4rem 1fr; gap:1rem;}
+.step .n{
+  font-family:'Fraunces', serif; font-weight:900; font-size:1.3rem; color:var(--accent);
+}
+.step h3{margin:0 0 .3rem; font-size:1rem; font-weight:600;}
+.step p{margin:0; font-size:.92rem; opacity:.85;}
+
+.tips{display:grid; gap:.9rem;}
+.tip{display:grid; grid-template-columns:7rem 1fr; gap:1rem; font-size:.9rem;}
+.tip .label{font-weight:600; color:var(--accent);}
+.tip p{margin:0; opacity:.8;}
+
+.back-link{
+  display:inline-block; margin:2rem 0; font-family:'IBM Plex Mono', monospace;
+  font-size:.8rem; text-decoration:none; border-bottom:1px solid var(--ink);
+}
+
+footer{padding:2rem 0 3rem; opacity:.4; font-size:.8rem; font-family:'IBM Plex Mono', monospace;}
