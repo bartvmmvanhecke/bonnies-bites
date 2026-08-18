@@ -49,6 +49,41 @@
         { "label": "Serveren", "tekst": "Lekker met groene salade en knapperig brood. Als bijgerecht bij gegrilde kip of varkensfilet." },
         { "label": "Vegan", "tekst": "Vervang room door kokosroom, gebruik vegan blauwe kaas en een eetlepel maïszetmeel als binder." }
       ]
+    },
+    {
+      "id": "V01",
+      "slug": "smashed-vijgencarpaccio",
+      "category": "Voorgerecht",
+      "title": "Smashed-vijgencarpaccio",
+      "description": "Wanneer carpaccio en vijgenseizoen samenkomen: platgedrukte zoete vijgen, romige burrata en krokante pistachenoten in één simpel maar feestelijk bord.",
+      "meta": {
+        "bereidingstijd": "15 min",
+        "porties": "1 persoon (makkelijk op te schalen)",
+        "moeilijkheid": "Makkelijk"
+      },
+      "ingredients": [
+        { "amount": "4 stuks", "naam": "verse vijgen" },
+        { "amount": "5 stuks", "naam": "pistachenoten, grof gehakt" },
+        { "amount": "2 el", "naam": "extra vierge olijfolie, verdeeld" },
+        { "amount": "1 stuk", "naam": "burrata" },
+        { "amount": "5 g", "naam": "rucola" },
+        { "amount": "5 g", "naam": "Parmezaanse kaas, grof geraspt" },
+        { "amount": "½ tl", "naam": "grove zeezoutvlokken" },
+        { "amount": "1 tl", "naam": "cremaceto classico" },
+        { "amount": "–", "naam": "versgemalen zwarte peper (naar smaak)" }
+      ],
+      "stappen": [
+        { "titel": "Vijgen voorbereiden", "tekst": "Snijd het puntje van de vijgen en schil de donkere schil eraf. Hak de pistachenoten grof en rooster deze kort in een droge pan." },
+        { "titel": "Pletten", "tekst": "Halveer de vijgen en verdeel met de snijkant naar boven over een plat bord. Vet de onderkant van een glas in met de helft van de olijfolie en druk de vijgen daarmee plat." },
+        { "titel": "Afwerken", "tekst": "Leg de burrata in het midden en scheur open. Verdeel de rucola erover. Bestrooi met de pistachenoten, geraspte Parmezaanse kaas, zeezoutvlokken en eventueel zwarte peper. Besprenkel met de cremaceto en de rest van de olijfolie." }
+      ],
+      "tips": [
+        { "label": "Vijgen", "tekst": "Kies rijpe, zachte vijgen — die geven het meeste sap en zoetheid bij het pletten." },
+        { "label": "Burrata vervangen", "tekst": "Geen burrata in huis? Bufalamozzarella werkt ook, al is die iets minder romig." },
+        { "label": "Cremaceto", "tekst": "Geen cremaceto? Vervang door een scheutje balsamicoazijn met een beetje honing." },
+        { "label": "Serveren", "tekst": "Lekker als voorgerecht met wat geroosterd brood erbij." },
+        { "label": "Bron", "tekst": "Origineel recept: AH Allerhande (ah.nl)." }
+      ]
     }
   ]
 }
