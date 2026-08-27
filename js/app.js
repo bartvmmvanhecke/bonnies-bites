@@ -1,4 +1,12 @@
 const CATEGORY_ORDER = ["Ontbijt", "Hapjes", "Drank", "Voorgerecht", "Hoofdgerecht", "Dessert"];
+const CATEGORY_ICON = {
+  Ontbijt: "🥐",
+  Hapjes: "🫒",
+  Drank: "🥂",
+  Voorgerecht: "🍽️",
+  Hoofdgerecht: "🍲",
+  Dessert: "🍮",
+};
 
 async function loadData() {
   const res = await fetch('data/recipes.json');
@@ -26,7 +34,8 @@ async function renderIndex() {
 
     const block = el('div', { class: 'category-block' });
     const head = el('div', { class: 'category-head' });
-    head.appendChild(el('span', { class: 'category-dot', style: `--dot:${color}` }));
+    const dot = el('span', { class: 'category-dot', style: `--dot:${color}` }, [document.createTextNode(CATEGORY_ICON[cat] || '')]);
+    head.appendChild(dot);
     head.appendChild(el('h2', {}, [document.createTextNode(cat.toLowerCase())]));
     head.appendChild(el('span', { class: 'category-count' }, [document.createTextNode(`${recipes.length} recept${recipes.length === 1 ? '' : 'en'}`)]));
     block.appendChild(head);
@@ -66,8 +75,9 @@ async function renderRecipe() {
 
   const panel = el('div', { class: 'title-panel' });
   const colorblock = el('div', { class: 'colorblock', style: `background:${color}` });
+  colorblock.appendChild(el('span', { class: 'icon-watermark' }, [document.createTextNode(CATEGORY_ICON[r.category] || '')]));
   colorblock.appendChild(el('span', { class: 'id' }, [document.createTextNode(r.id)]));
-  colorblock.appendChild(el('span', { class: 'cat' }, [document.createTextNode(r.category)]));
+  colorblock.appendChild(el('span', { class: 'cat' }, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`)]));
   panel.appendChild(colorblock);
   const textblock = el('div', { class: 'textblock' });
   textblock.appendChild(el('h1', {}, [document.createTextNode(r.title.toLowerCase())]));
