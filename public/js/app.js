@@ -1,4 +1,12 @@
 const CATEGORY_ORDER = ["Ontbijt", "Hapjes", "Drank", "Voorgerecht", "Hoofdgerecht", "Dessert"];
+const CATEGORY_ICON = {
+  Ontbijt: "🥐",
+  Hapjes: "🫒",
+  Drank: "🥂",
+  Voorgerecht: "🍽️",
+  Hoofdgerecht: "🍲",
+  Dessert: "🍮",
+};
 
 async function loadData() {
   const res = await fetch('data/recipes.json');
@@ -48,7 +56,7 @@ function recipeCard(r, color) {
   card.appendChild(el('p', { class: 'dish-desc' }, [document.createTextNode(r.description)]));
 
   const foot = el('div', { class: 'dish-foot' });
-  foot.appendChild(el('span', {}, [document.createTextNode(r.category)]));
+  foot.appendChild(el('span', {}, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`.trim())]));
   if (r.meta?.porties) {
     foot.appendChild(el('span', { class: 'dot' }, [document.createTextNode('·')]));
     foot.appendChild(el('span', {}, [document.createTextNode(r.meta.porties)]));
@@ -127,7 +135,7 @@ async function renderRecipe() {
   hero.appendChild(photo);
 
   const text = el('div', { class: 'detail-text' });
-  text.appendChild(el('span', { class: 'cat-eyebrow' }, [document.createTextNode(r.category)]));
+  text.appendChild(el('span', { class: 'cat-eyebrow' }, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`.trim())]));
   text.appendChild(el('h1', {}, [document.createTextNode(r.title)]));
   text.appendChild(el('p', { class: 'description' }, [document.createTextNode(r.description)]));
   hero.appendChild(text);

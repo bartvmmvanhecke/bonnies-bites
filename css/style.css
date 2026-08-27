@@ -108,8 +108,9 @@ button{font-family:inherit;}
 
 .dish-foot{
   display:flex; align-items:center; gap:.4rem; color:var(--muted); font-size:.78rem;
-  padding:.8rem 1rem 1rem;
+  padding:.8rem 1rem 1rem; flex-wrap:wrap;
 }
+.dish-foot span{white-space:nowrap;}
 .dish-foot .dot{opacity:.5;}
 
 .empty-cat{color:var(--muted); font-size:.9rem; font-style:italic; padding:2rem 0;}

@@ -1,11 +1,11 @@
 {
   "categories": {
-    "Ontbijt":      { "color": "#C08A2E" },
-    "Hapjes":       { "color": "#B5562C" },
-    "Drank":        { "color": "#2E5C6E" },
-    "Voorgerecht":  { "color": "#5B8C5A" },
-    "Hoofdgerecht": { "color": "#8B2635" },
-    "Dessert":      { "color": "#7A3B5C" }
+    "Ontbijt":      { "color": "#E8A23C" },
+    "Hapjes":       { "color": "#D9622E" },
+    "Drank":        { "color": "#2C93A0" },
+    "Voorgerecht":  { "color": "#6BA368" },
+    "Hoofdgerecht": { "color": "#C23B4B" },
+    "Dessert":      { "color": "#A6528C" }
   },
   "recipes": [
     {
