@@ -4,6 +4,23 @@ Dit is een simpele statische site. Nieuwe recepten toevoegen betekent
 enkel een nieuw blokje in `data/recipes.json` — er hoeft niets
 "gebouwd" te worden, de site leest dat bestand rechtstreeks in.
 
+## Lokaal draaien (Vite dev server)
+
+Om wijzigingen live te zien terwijl je bewerkt:
+
+```
+npm install
+npm run dev
+```
+
+Dit start een lokale server (meestal op `http://localhost:5173`) die
+automatisch herlaadt bij elke aanpassing aan de HTML/CSS/JS/JSON-bestanden.
+
+Andere handige commando's:
+- `npm run build` — bouwt een productieversie in `dist/` (optioneel, Netlify
+  heeft dit niet nodig — zie hieronder).
+- `npm run preview` — bekijkt die gebouwde `dist/`-versie lokaal.
+
 ## Eenmalige setup (±10 min)
 
 1. **GitHub-repo aanmaken**
