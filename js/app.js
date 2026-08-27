@@ -36,15 +36,23 @@ function photoGradient(color) {
   return `linear-gradient(135deg, ${shade(color, 0.14)}, ${shade(color, -0.12)})`;
 }
 
-function recipeCard(r, color) {
-  const card = el('button', { class: 'recipe-card', type: 'button' });
-
-  const photo = el('div', { class: 'dish-photo', style: `background:${photoGradient(color)}` });
+function photoBlock(r, color, className) {
+  const photo = el('div', { class: className, style: r.image ? '' : `background:${photoGradient(color)}` });
+  if (r.image) {
+    photo.appendChild(el('img', { class: 'dish-img', src: r.image, alt: r.title }));
+  }
   if (r.meta?.moeilijkheid) {
     photo.appendChild(el('span', { class: `level-badge level-${r.meta.moeilijkheid}` }, [document.createTextNode(r.meta.moeilijkheid)]));
   }
-  photo.appendChild(el('span', { class: 'watermark' }, [document.createTextNode(r.id)]));
-  card.appendChild(photo);
+  if (!r.image) {
+    photo.appendChild(el('span', { class: 'watermark' }, [document.createTextNode(r.id)]));
+  }
+  return photo;
+}
+
+function recipeCard(r, color) {
+  const card = el('button', { class: 'recipe-card', type: 'button' });
+  card.appendChild(photoBlock(r, color, 'dish-photo'));
 
   const row = el('div', { class: 'dish-row' });
   row.appendChild(el('h3', {}, [document.createTextNode(r.title)]));
@@ -127,12 +135,7 @@ async function renderRecipe() {
   const wrap = el('div', { class: 'wrap' });
 
   const hero = el('div', { class: 'detail-hero' });
-  const photo = el('div', { class: 'detail-photo', style: `background:${photoGradient(color)}` });
-  if (r.meta?.moeilijkheid) {
-    photo.appendChild(el('span', { class: `level-badge level-${r.meta.moeilijkheid}` }, [document.createTextNode(r.meta.moeilijkheid)]));
-  }
-  photo.appendChild(el('span', { class: 'watermark' }, [document.createTextNode(r.id)]));
-  hero.appendChild(photo);
+  hero.appendChild(photoBlock(r, color, 'detail-photo'));
 
   const text = el('div', { class: 'detail-text' });
   text.appendChild(el('span', { class: 'cat-eyebrow' }, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`.trim())]));
