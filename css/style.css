@@ -73,7 +73,7 @@ button{font-family:inherit;}
 }
 .recipe-card{
   display:block; width:100%; text-align:left; background:var(--surface); border:none;
-  border-radius:1rem; overflow:hidden; cursor:pointer; padding:0;
+  border-radius:4px; overflow:hidden; cursor:pointer; padding:0;
   box-shadow:var(--shadow); transition:box-shadow .15s ease, transform .15s ease;
 }
 .recipe-card:hover{box-shadow:var(--shadow-hover); transform:translateY(-2px);}
