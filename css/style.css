@@ -46,6 +46,8 @@ dialog .pick-category input{position:absolute;opacity:0;width:1px;height:1px;mar
 .pick-category span{display:inline-block;background:var(--color);border:2px solid transparent;border-radius:99px;padding:7px 14px;font-size:13px}
 .pick-category input:checked+span{border-color:var(--ink);font-weight:700}
 .pick-category input:focus-visible+span{outline:3px solid var(--blue)}
+.pick-category.missing legend{color:#aa234e}
+.pick-category.missing span{outline:2px dashed #aa234e;outline-offset:2px}
 .dictate{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:18px;padding:16px;border:2px dashed var(--ink);border-radius:14px;background:var(--yellow);font-weight:700;font-size:15px;cursor:pointer}
 .dictate span:first-child{font-size:20px}
 .dictate[aria-pressed=true]{background:var(--pink);border-style:solid;animation:listen 1.2s ease-in-out infinite}
