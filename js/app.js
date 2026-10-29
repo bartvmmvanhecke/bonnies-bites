@@ -1,201 +1,36 @@
-const CATEGORY_ORDER = ["Ontbijt", "Hapjes", "Drank", "Voorgerecht", "Hoofdgerecht", "Dessert"];
-const CATEGORY_ICON = {
-  Ontbijt: "🥐",
-  Hapjes: "🫒",
-  Drank: "🥂",
-  Voorgerecht: "🍽️",
-  Hoofdgerecht: "🍲",
-  Dessert: "🍮",
-};
-
-async function loadData() {
-  const res = await fetch('data/recipes.json');
-  return res.json();
-}
-
-function el(tag, attrs = {}, children = []) {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (k === 'html') node.innerHTML = v;
-    else if (k.startsWith('on')) node[k.toLowerCase()] = v;
-    else node.setAttribute(k, v);
-  }
-  for (const c of [].concat(children)) if (c) node.appendChild(c);
-  return node;
-}
-
-function shade(hex, percent) {
-  const n = parseInt(hex.slice(1), 16);
-  const r = Math.max(0, Math.min(255, (n >> 16) + Math.round(255 * percent)));
-  const g = Math.max(0, Math.min(255, ((n >> 8) & 0xff) + Math.round(255 * percent)));
-  const b = Math.max(0, Math.min(255, (n & 0xff) + Math.round(255 * percent)));
-  return `rgb(${r},${g},${b})`;
-}
-
-function photoGradient(color) {
-  return `linear-gradient(135deg, ${shade(color, 0.14)}, ${shade(color, -0.12)})`;
-}
-
-function recipeCard(r, color) {
-  const card = el('button', { class: 'recipe-card', type: 'button' });
-
-  const photo = el('div', { class: 'dish-photo', style: `background:${photoGradient(color)}` });
-  if (r.meta?.moeilijkheid) {
-    photo.appendChild(el('span', { class: `level-badge level-${r.meta.moeilijkheid}` }, [document.createTextNode(r.meta.moeilijkheid)]));
-  }
-  photo.appendChild(el('span', { class: 'watermark' }, [document.createTextNode(r.id)]));
-  card.appendChild(photo);
-
-  const row = el('div', { class: 'dish-row' });
-  row.appendChild(el('h3', {}, [document.createTextNode(r.title)]));
-  if (r.meta?.bereidingstijd) {
-    row.appendChild(el('span', { class: 'time-badge' }, [document.createTextNode(r.meta.bereidingstijd)]));
-  }
-  card.appendChild(row);
-
-  card.appendChild(el('p', { class: 'dish-desc' }, [document.createTextNode(r.description)]));
-
-  const foot = el('div', { class: 'dish-foot' });
-  foot.appendChild(el('span', {}, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`.trim())]));
-  if (r.meta?.porties) {
-    foot.appendChild(el('span', { class: 'dot' }, [document.createTextNode('·')]));
-    foot.appendChild(el('span', {}, [document.createTextNode(r.meta.porties)]));
-  }
-  card.appendChild(foot);
-
-  return card;
-}
-
-async function renderIndex() {
-  const data = await loadData();
-  const app = document.getElementById('categories');
-  app.innerHTML = '';
-
-  const tabs = el('div', { class: 'filter-tabs' });
-  const grid = el('div', { class: 'recipe-grid' });
-  const empty = el('p', { class: 'empty-cat' }, [document.createTextNode('nog geen recepten in deze categorie')]);
-  empty.style.display = 'none';
-
-  function draw(activeCat) {
-    grid.innerHTML = '';
-    const recipes = activeCat ? data.recipes.filter(r => r.category === activeCat) : data.recipes;
-    empty.style.display = recipes.length === 0 ? '' : 'none';
-    for (const r of recipes) {
-      const color = data.categories[r.category]?.color || '#333';
-      grid.appendChild(recipeCard(r, color));
-      grid.lastChild.onclick = () => navigate(r.slug);
-    }
-  }
-
-  function setActive(btn) {
-    tabs.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('is-active'));
-    btn.classList.add('is-active');
-  }
-
-  const allTab = el('button', { class: 'filter-tab is-active', type: 'button' }, [document.createTextNode('Alle gerechten')]);
-  allTab.onclick = () => { setActive(allTab); draw(null); };
-  tabs.appendChild(allTab);
-
-  for (const cat of CATEGORY_ORDER) {
-    const tab = el('button', { class: 'filter-tab', type: 'button' }, [document.createTextNode(cat)]);
-    tab.onclick = () => { setActive(tab); draw(cat); };
-    tabs.appendChild(tab);
-  }
-
-  app.appendChild(tabs);
-  app.appendChild(grid);
-  app.appendChild(empty);
-  draw(null);
-}
-
-async function renderRecipe() {
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('slug');
-  const data = await loadData();
-  const r = data.recipes.find(x => x.slug === slug);
-  const mount = document.getElementById('recipe-mount');
-
-  if (!r) {
-    mount.innerHTML = '<p style="padding:3rem 1.5rem;">Recept niet gevonden. <a href="index.html">Terug naar overzicht</a>.</p>';
-    return;
-  }
-
-  const color = data.categories[r.category]?.color || '#333';
-  document.title = `${r.title} — bonnie's bites`;
-  document.documentElement.style.setProperty('--accent-cat', color);
-
-  const wrap = el('div', { class: 'wrap' });
-
-  const hero = el('div', { class: 'detail-hero' });
-  const photo = el('div', { class: 'detail-photo', style: `background:${photoGradient(color)}` });
-  if (r.meta?.moeilijkheid) {
-    photo.appendChild(el('span', { class: `level-badge level-${r.meta.moeilijkheid}` }, [document.createTextNode(r.meta.moeilijkheid)]));
-  }
-  photo.appendChild(el('span', { class: 'watermark' }, [document.createTextNode(r.id)]));
-  hero.appendChild(photo);
-
-  const text = el('div', { class: 'detail-text' });
-  text.appendChild(el('span', { class: 'cat-eyebrow' }, [document.createTextNode(`${CATEGORY_ICON[r.category] || ''} ${r.category}`.trim())]));
-  text.appendChild(el('h1', {}, [document.createTextNode(r.title)]));
-  text.appendChild(el('p', { class: 'description' }, [document.createTextNode(r.description)]));
-  hero.appendChild(text);
-  wrap.appendChild(hero);
-
-  wrap.appendChild(el('button', { class: 'back-link', type: 'button', onClick: () => (window.location.href = 'index.html') }, [document.createTextNode('← terug naar alle recepten')]));
-
-  const chips = el('div', { class: 'meta-chips' });
-  for (const [label, val] of Object.entries(r.meta || {})) {
-    const chip = el('div', { class: 'meta-chip' });
-    chip.appendChild(el('div', { class: 'label' }, [document.createTextNode(label)]));
-    chip.appendChild(el('div', { class: 'val' }, [document.createTextNode(val)]));
-    chips.appendChild(chip);
-  }
-  wrap.appendChild(chips);
-
-  const ingSection = el('section', { class: 'block' });
-  ingSection.appendChild(el('h2', {}, [document.createTextNode('Ingrediënten')]));
-  const table = el('table', { class: 'ingredients' });
-  for (const ing of r.ingredients) {
-    const row = el('tr');
-    row.appendChild(el('td', {}, [document.createTextNode(ing.amount)]));
-    row.appendChild(el('td', {}, [document.createTextNode(ing.naam)]));
-    table.appendChild(row);
-  }
-  ingSection.appendChild(table);
-  wrap.appendChild(ingSection);
-
-  const stepSection = el('section', { class: 'block' });
-  stepSection.appendChild(el('h2', {}, [document.createTextNode('Bereiding')]));
-  const stepsWrap = el('div', { class: 'steps' });
-  r.stappen.forEach((s, i) => {
-    const step = el('div', { class: 'step' });
-    step.appendChild(el('div', { class: 'n' }, [document.createTextNode(String(i + 1).padStart(2, '0'))]));
-    const body = el('div');
-    body.appendChild(el('h3', {}, [document.createTextNode(s.titel)]));
-    body.appendChild(el('p', {}, [document.createTextNode(s.tekst)]));
-    step.appendChild(body);
-    stepsWrap.appendChild(step);
-  });
-  stepSection.appendChild(stepsWrap);
-  wrap.appendChild(stepSection);
-
-  if (r.tips && r.tips.length) {
-    const tipSection = el('section', { class: 'block' });
-    tipSection.appendChild(el('h2', {}, [document.createTextNode('Tips & variaties')]));
-    const tipsWrap = el('div', { class: 'tips' });
-    for (const t of r.tips) {
-      const tip = el('div', { class: 'tip' });
-      tip.appendChild(el('div', { class: 'label' }, [document.createTextNode(t.label)]));
-      tip.appendChild(el('p', {}, [document.createTextNode(t.tekst)]));
-      tipsWrap.appendChild(tip);
-    }
-    tipSection.appendChild(tipsWrap);
-    wrap.appendChild(tipSection);
-  }
-
-  mount.appendChild(wrap);
-}
-
-function navigate(slug) {
-  window.location.href = `recipe.html?slug=${slug}`;
-}
+import { recipes, photos } from './recipe-library.js';
+const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const categories=[['Koken','Iets lekkers op tafel','🍋','#fbc6dd'],['Met de kids','Kleine mensen, grote plannen','🪁','#bde6fc'],['Eropuit','Dichtbij of wat verder weg','🧳','#ffda84'],['Kleine gelukjes','Meer leuks voor elke dag','🌼','#dfea9c']];
+const examples=[
+{slug:'regen-safari',title:'Regen? Tijd voor een plassen-safari.',category:'Met de kids',description:'Laarzen aan, een thermos mee en op zoek naar de allergrootste plas.',detail:'Kies een korte, veilige wandelroute in je buurt. Neem droge sokken, regenkleding en iets warms mee.\nMaak een kleine speurkaart: zoek een grote plas, een slak en drie verschillende blaadjes. Kinderen kiezen de route.\nEindig thuis met een warme drank. Controleer het weer en vermijd diepe of stromende plassen.',time:'1 uur',quick:false,icon:'☔',tags:'regen buiten budget gratis'},
+{slug:'kartonnen-stad',title:'Een hele stad. Uit de papierbak.',category:'Met de kids',description:'Een schoendoos wordt een huis. De rest van de woonkamer volgt vanzelf.',detail:'Verzamel lege dozen, kleurpotloden en papierplakband.\nTeken ramen en deuren, plak een weg op een groot stuk karton en laat iedereen een gebouw maken.\nEen volwassene doet het snijwerk. Bewaar de stad voor het volgende regenmoment.',time:'30 min',quick:true,icon:'🏘️',tags:'binnen regen knutselen budget'},
+{slug:'weekend-zonder-draaiboek',title:'Een mini-vakantie, één treinrit ver.',category:'Eropuit',description:'Kies een stadje in de buurt. Eén nacht weg, nul propvolle planning.',detail:'Kies een bestemming die met een korte treinrit bereikbaar is.\nSpreek maar drie dingen af: ergens slapen, iets lekkers eten en een wandeling. Laat de rest open.\nControleer verbindingen en beschikbaarheid voordat je boekt. Dit is een voorbeeldformat, geen beoordeelde bestemming.',time:'Een weekend',quick:false,icon:'🚂',tags:'reizen vakantie weekend trein'},
+{slug:'buurt-bingo',title:'Toerist in je eigen postcode.',category:'Eropuit',description:'Een straat die je nooit neemt. Een bankje dat je nog niet kende. Meer moet dat niet zijn.',detail:'Neem een andere afslag tijdens je wandeling.\nZoek drie dingen: een mooi huis, een stukje groen en een plek waar je even kunt zitten.\nMaak een foto van je favoriete vondst en stuur die door aan een vriend.',time:'30 min',quick:true,icon:'🚲',tags:'wandelen dichtbij budget gratis'},
+{slug:'restjes-bloemen',title:'Een vrijdagboeketje van losse takjes.',category:'Kleine gelukjes',description:'Drie kleine vaasjes. Een paar takjes uit je tuin. Een tafel die glimlacht.',detail:'Zet drie lege flesjes of kleine vaasjes bij elkaar.\nGebruik een paar losse bloemen of takjes uit je eigen tuin, met toestemming.\nVerschillende hoogtes maken het speels. Ververs het water regelmatig.',time:'10 min',quick:true,icon:'🌷',tags:'thuis creatief budget'},
+{slug:'vrienden-pot',title:'De ‘wat zullen we doen?’-pot.',category:'Kleine gelukjes',description:'Iedereen schrijft een klein plan op. Volgende vrije zondag: trekken maar.',detail:'Pak een lege pot en wat papiertjes.\nIedereen schrijft drie haalbare plannen op. Spreek vooraf een budget en maximale reistijd af.\nTrek bij jullie volgende vrije moment een briefje. Geen zin in het getrokken plan? Nog een keer mag.',time:'15 min',quick:true,icon:'🎟️',tags:'vrienden familie thuis weekend'}
+].map(x=>({...x,example:true,author:'Voorbeeldtip'}));
+const recipeIdeas=recipes.map((r,i)=>({...r,category:'Koken',recipe:r,photo:photos[i],time:r.meta.bereidingstijd,quick:parseInt(r.meta.bereidingstijd)<=30&&!r.meta.bereidingstijd.includes('koelen'),tags:r.ingredients.map(x=>x.naam).join(' '),author:'Uit Bonnie’s receptenatelier'}));
+function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+let drafts=read('bb-community-drafts',[]);if(!Array.isArray(drafts))drafts=[];
+let saved=new Set(read('bb-favorites',[])), category='Alles',query='',onlySaved=false,quick=false;
+const ideas=[...recipeIdeas.slice(0,1),examples[0],examples[2],...recipeIdeas.slice(1,2),examples[4],examples[1],...recipeIdeas.slice(2),examples[3],examples[5]];
+const all=()=>[...drafts,...ideas];
+function persist(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{return false}}
+$('#categories').innerHTML=categories.map(([name,sub,icon,color])=>`<button class="category" style="--color:${color}" data-category="${name}" aria-pressed="false"><span class="arrow">↗</span><span class="icon" aria-hidden="true">${icon}</span><strong>${name}</strong><small>${sub}</small></button>`).join('');
+$('#filters').innerHTML=['Alles',...categories.map(x=>x[0])].map(x=>`<button data-category="${x}" aria-pressed="${x==='Alles'}">${x}</button>`).join('');
+const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+function matches(){return all().filter(x=>(category==='Alles'||x.category===category)&&(!onlySaved||saved.has(x.slug))&&(!quick||x.quick)&&normalize([x.title,x.description,x.category,x.tags||''].join(' ')).includes(normalize(query)))}
+function render(){const list=matches();$('#saved-count').textContent=all().filter(x=>saved.has(x.slug)).length;$('#saved-nav').setAttribute('aria-pressed',onlySaved);document.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.category===category));$('#result-note').textContent=`${list.length} ${onlySaved?'bewaarde ':''}ideeën${category!=='Alles'?' · '+category:''}${quick?' · weinig tijd':''}`;$('#empty').hidden=!!list.length;$('#grid').innerHTML=list.map(x=>{const c=categories.find(c=>c[0]===x.category);return `<article class="idea-card"><div class="card-visual" style="--color:${c[3]}">${x.photo?`<img src="${x.photo}" alt="${x.slug==='preischotel-blauwe-kaas-walnoten'?esc(x.title):'Sfeerbeeld bij het recept'}" loading="lazy">`:`<span class="art" aria-hidden="true">${x.icon||c[2]}</span>`}<span class="visual-caption">${x.example?'Voorbeeldtip':x.local?'Jouw lokale idee':x.slug==='preischotel-blauwe-kaas-walnoten'?'Uit het receptenatelier':'Recept · sfeerbeeld'}</span></div><button class="save" data-save="${esc(x.slug)}" aria-pressed="${saved.has(x.slug)}" aria-label="${saved.has(x.slug)?'Verwijder':'Bewaar'} ${esc(x.title)}">${saved.has(x.slug)?'♥':'♡'}</button><div class="card-body"><div class="card-meta"><span>${x.category}</span><span>◷ ${esc(x.time)}</span></div><h3><a href="#idee/${encodeURIComponent(x.slug)}">${esc(x.title)}</a></h3><p>${esc(x.description)}</p><div class="byline"><strong>${esc(x.author)}</strong><span>Bekijk idee ↗</span></div></div></article>`}).join('')}
+function reset(){category='Alles';query='';onlySaved=false;quick=false;$('#search').value='';$('#sort').value='default';render()}
+document.addEventListener('click',e=>{let b=e.target.closest('[data-category],[data-save],[data-share]');if(!b)return;if(b.hasAttribute('data-category')){category=b.dataset.category;render();$('#ontdek').scrollIntoView({behavior:'smooth'})}if(b.hasAttribute('data-save')){const id=b.dataset.save;saved.has(id)?saved.delete(id):saved.add(id);persist('bb-favorites',[...saved]);render()}if(b.hasAttribute('data-share'))share()});
+$('#search').addEventListener('input',e=>{query=e.target.value;render()});$('#sort').addEventListener('change',e=>{quick=e.target.value==='quick';render()});$('#saved-nav').onclick=()=>{onlySaved=!onlySaved;render();$('#ontdek').scrollIntoView()};$('#reset').onclick=reset;
+const modal=$('#modal');let returnFocus;
+function show(html){returnFocus=document.activeElement;$('#modal-content').innerHTML=html;if(!modal.open)modal.showModal()}
+function close(){modal.close();if(location.hash.startsWith('#idee/')||location.hash.startsWith('#recept/'))history.replaceState(null,'',location.pathname+'#ontdek')}
+$('.close').onclick=close;modal.addEventListener('cancel',e=>{e.preventDefault();close()});modal.addEventListener('close',()=>returnFocus?.focus());
+function detail(x){if(!x)return;show(`<p class="eyebrow">${esc(x.category)} · ${x.example?'VOORBEELDTIP':x.local?'LOKAAL CONCEPT':'RECEPTENATELIER'}</p><h2 id="modal-title">${esc(x.title)}</h2><p>${esc(x.description)}</p><p class="detail-meta">◷ ${esc(x.time)} · ${esc(x.author)}</p>${x.recipe?`<h3>Dit heb je nodig</h3><p>${esc(x.recipe.meta.porties)}</p><ul>${x.recipe.ingredients.map(i=>`<li>${esc(i.amount)} ${esc(i.naam)}</li>`).join('')}</ul><h3>Zo pak je het aan</h3><ol>${x.recipe.stappen.map(s=>`<li><strong>${esc(s.titel)}</strong><br>${esc(s.tekst)}</li>`).join('')}</ol>${x.recipe.tips.map(t=>`<p><strong>${esc(t.label)}:</strong> ${esc(t.tekst)}</p>`).join('')}`:`<h3>Zo pak je het aan</h3><p class="detail-copy">${esc(x.detail)}</p>`}${x.example?'<p class="local-note">Deze voorbeeldtip toont hoe een bijdrage eruit kan zien. Er is nog geen communitybeoordeling.</p>':''}${x.local?`<button class="text-button" id="delete-draft">Verwijder dit lokale idee</button>`:''}`);if(x.local)$('#delete-draft').onclick=()=>{drafts=drafts.filter(d=>d.slug!==x.slug);persist('bb-community-drafts',drafts);saved.delete(x.slug);persist('bb-favorites',[...saved]);close();render()}}
+function route(){const m=location.hash.match(/^#(?:idee|recept)\/(.+)$/);if(m){let slug;try{slug=decodeURIComponent(m[1])}catch{return}const x=all().find(x=>x.slug===slug);if(x)detail(x);else show('<h2 id="modal-title">Dat idee vinden we even niet.</h2><p>Sluit dit venster en ontdek een andere vondst.</p>')}}
+window.addEventListener('hashchange',route);$('#surprise').onclick=()=>{const list=matches();if(list.length)location.hash='idee/'+encodeURIComponent(list[Math.floor(Math.random()*list.length)].slug);else $('#empty').scrollIntoView()};
+function share(values={}){show(`<p class="eyebrow">EEN GOED IDEE HOEFT GEEN ROMAN TE ZIJN</p><h2 id="modal-title">Heb jij nog een goeie?</h2><p class="local-note">Preview: je bewaart een idee op dit toestel. Het wordt nog niet naar Bonnie verstuurd of openbaar geplaatst.</p><form id="idea-form"><label>Waar past je idee?<select name="category">${categories.map(c=>`<option ${values.category===c[0]?'selected':''}>${c[0]}</option>`).join('')}</select></label><label>Geef het een titel<input name="title" required maxlength="90" placeholder="Bijvoorbeeld: onze zondagse pannenkoekentocht" value="${esc(values.title||'')}"></label><label>Waarom is dit zo leuk?<textarea name="description" required maxlength="280" placeholder="Je tip in één of twee zinnen">${esc(values.description||'')}</textarea></label><label>Hoe pak je het aan?<textarea name="detail" required maxlength="4000" placeholder="Wat heb je nodig? Wat moet iemand weten?">${esc(values.detail||'')}</textarea></label><label>Hoeveel tijd heb je nodig?<input name="time" required maxlength="40" placeholder="20 min, een middag…" value="${esc(values.time||'')}"></label><label>Je voornaam<input name="author" required maxlength="40" autocomplete="given-name" value="${esc(values.author||'')}"></label><p class="local-note">Deel geen privégegevens van anderen. Een foto of account is niet nodig.</p><button class="primary" type="submit">Bekijk mijn idee →</button></form>`);$('#idea-form').onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));for(const k of Object.keys(v))v[k]=v[k].trim();if(Object.values(v).some(v=>!v)){e.target.reportValidity();return}review(v)}}
+function review(v){show(`<p class="eyebrow">EVEN SPIEKEN VOOR JE BEWAART</p><h2 id="modal-title">${esc(v.title)}</h2><p class="detail-meta">${esc(v.category)} · ${esc(v.time)} · ${esc(v.author)}</p><p>${esc(v.description)}</p><p class="detail-copy">${esc(v.detail)}</p><p class="local-note">Alleen op dit toestel bewaard. Nog niet gedeeld met de community.</p><p id="form-error" class="error" role="alert"></p><div class="form-actions"><button class="text-button" id="edit">← Aanpassen</button><button class="primary" id="confirm">Bewaar op dit toestel</button></div>`);$('#edit').onclick=()=>share(v);$('#confirm').onclick=()=>{const idea={...v,slug:'lokaal-'+crypto.randomUUID(),local:true,quick:/^([1-2]?\d|30)\s*min/i.test(v.time),author:v.author+' · jij'};if(!persist('bb-community-drafts',[idea,...drafts])){$('#form-error').textContent='Bewaren lukt niet. Je browseropslag is vol of geblokkeerd. Je tekst staat hierboven nog klaar.';return}drafts.unshift(idea);render();show('<h2 id="modal-title">Een goeie erbij. Dankjewel! ✳</h2><p>Je idee is op dit toestel bewaard en staat tussen de ideeën. Het is nog niet openbaar gedeeld.</p><button class="primary" id="done">Bekijk mijn idee</button>');$('#done').onclick=()=>{close();location.hash='idee/'+idea.slug}}}
+render();route();
