@@ -101,3 +101,5 @@ function share(values={}){
 }
 render();route();
 {const p=new URLSearchParams(location.search),deel=p.get('deel');if(deel){history.replaceState(null,'',location.pathname+location.hash);share({category:deel==='camping'?'Campings':categories.some(c=>c[0]===deel)?deel:'',region:p.get('regio')||''})}}
+
+window.addEventListener('bonnie:discover',e=>{category=e.detail.category||'Alles';query=e.detail.query||'';region='';quick=!!e.detail.quick;onlySaved=false;$('#search').value=query;$('#sort').value=quick?'quick':'default';animateFilters(category);render();$('#ontdek').scrollIntoView({behavior:'smooth'})});
