@@ -15,7 +15,7 @@ if(!idea){renderContent('<h1>Dit idee vinden we even niet.</h1><p>Het kan verwij
 else{
 idea=enrichIdea(idea);idea={...idea,category:idea.category==='Kleine gelukjes'?'Cadeautips':idea.category};document.title=idea.title+' — Bonnie’s Bites';detail(idea);
 if(!idea.photos?.length){if(idea.photo){const wrap=document.createElement('div');wrap.className='detail-photos';const img=document.createElement('img');img.src=idea.photo;img.alt=idea.photoAlt||'Sfeerbeeld bij '+idea.title;wrap.append(img);$('#idea-title').after(wrap)}else{const art=document.createElement('div');art.className='idea-placeholder';art.setAttribute('aria-hidden','true');art.textContent=idea.icon||categories.find(c=>c[0]===idea.category)?.[2]||'✳';$('#idea-title').after(art)}}
-renderResearch(idea);$('#share-related').href='/?deel='+encodeURIComponent(idea.category);
+renderResearch(idea);arrangeDetail();$('#share-related').href='/?deel='+encodeURIComponent(idea.category);
 }
 }catch{renderContent('<h1>Even geen verbinding.</h1><p>We konden dit idee niet laden. Probeer de pagina opnieuw te openen.</p>')}
 
@@ -29,4 +29,16 @@ function renderResearch(idea){
  const c=info.coordinates;if(c&&Number.isFinite(c.lat)&&Number.isFinite(c.lon)&&Math.abs(c.lat)<=90&&Math.abs(c.lon)<=180){const map=document.createElement('section');map.className='map-panel';map.innerHTML=`<h3>Waar ligt het?</h3><p>${esc(info.location||info.address||'')}</p><iframe title="Locatie van ${esc(idea.title)}" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${c.lon-5},${c.lat-4},${c.lon+5},${c.lat+4}&amp;layer=mapnik&amp;marker=${c.lat},${c.lon}"></iframe><a href="https://www.openstreetmap.org/?mlat=${c.lat}&amp;mlon=${c.lon}#map=11/${c.lat}/${c.lon}" target="_blank" rel="noopener">Open de kaart ↗</a><small>© OpenStreetMap-bijdragers</small>`;section.append(map)}
  if(!info.coordinates&&info.address){const a=document.createElement('a');a.className='primary';a.href='https://www.openstreetmap.org/search?query='+encodeURIComponent(info.address);a.target='_blank';a.rel='noopener';a.textContent='Zoek dit adres op de kaart ↗';section.append(a)}$('#idea-content').append(section);
  const images=[...document.querySelectorAll('.detail-photos img')];if(images.length){const dialog=document.createElement('dialog');dialog.className='research-lightbox';dialog.setAttribute('aria-label','Fotogalerij');dialog.innerHTML='<button class="photo-close" aria-label="Galerij sluiten">×</button><img alt=""><div><button class="photo-prev" aria-label="Vorige foto">←</button><span></span><button class="photo-next" aria-label="Volgende foto">→</button></div>';document.body.append(dialog);let index=0;const show=()=>{dialog.querySelector('img').src=images[index].src;dialog.querySelector('img').alt=images[index].alt;dialog.querySelector('div span').textContent=`${index+1} / ${images.length}`};images.forEach((img,i)=>{const b=document.createElement('button');b.className='gallery-photo';b.setAttribute('aria-label',`Vergroot foto ${i+1}`);img.replaceWith(b);b.append(img);b.onclick=()=>{index=i;show();dialog.showModal()};dialog.addEventListener('close',()=>{if(index===i)b.focus()})});dialog.querySelector('.photo-close').onclick=()=>dialog.close();dialog.querySelector('.photo-prev').onclick=()=>{index=(index+images.length-1)%images.length;show()};dialog.querySelector('.photo-next').onclick=()=>{index=(index+1)%images.length;show()}}
+}
+
+function arrangeDetail(){
+ const content=$('#idea-content'),gallery=content.querySelector('.detail-photos');
+ if(gallery){gallery.classList.add('gallery');gallery.dataset.count=Math.min(gallery.children.length,3);[...gallery.children].forEach((photo,i)=>{if(i>2)photo.hidden=true});if(gallery.children.length>3){const more=document.createElement('span');more.className='gallery-more';more.textContent='Bekijk alle '+gallery.children.length+' foto’s';gallery.append(more)}}
+ const columns=document.createElement('div');columns.className='camp-columns idea-columns';const copy=document.createElement('div');copy.className='idea-copy';const aside=document.createElement('aside');
+ const heading=content.querySelector('#idea-title'),eyebrow=content.querySelector(':scope > .eyebrow'),placeholder=content.querySelector('.idea-placeholder');
+ for(const node of [...content.children]){if(node!==heading&&node!==eyebrow&&node!==gallery&&node!==placeholder)copy.append(node)}
+ const map=copy.querySelector('.map-panel');if(map)aside.append(map);
+ else{const addressLink=copy.querySelector('.research-section > a.primary');if(addressLink){const panel=document.createElement('section');panel.className='map-panel';const title=document.createElement('h3');title.textContent='Waar ligt het?';panel.append(title,addressLink);aside.append(panel)}}
+ const suggest=$('.idea-page > .suggest-panel');if(suggest)aside.append(suggest);
+ columns.append(copy,aside);content.append(columns);
 }
