@@ -19,11 +19,36 @@ const all=()=>[...drafts,...ideas];
 function persist(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{return false}}
 $('#categories').innerHTML=categories.map(([name,sub,icon,color])=>`<button class="category" style="--color:${color}" data-category="${name}" aria-pressed="false"><span class="arrow">↗</span><span class="icon" aria-hidden="true">${icon}</span><strong>${name}</strong><small>${sub}</small></button>`).join('');
 $('#filters').innerHTML=['Alles',...categories.map(x=>x[0])].map(x=>`<button data-category="${x}" aria-pressed="${x==='Alles'}">${x}</button>`).join('');
+// Collapse filters in sequence; layout movement carries the selected pill left.
+let filterRun=0;
+const filterButtons=[...$('#filters').querySelectorAll('button')];
+const filterWidths=new Map();
+function rememberFilterWidths(){for(const b of filterButtons){if(!b.hidden)filterWidths.set(b,b.getBoundingClientRect().width)}}
+rememberFilterWidths();
+async function animateFilters(selected){
+ const run=++filterRun, reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ for(const b of filterButtons){b.removeAttribute('aria-hidden');b.getAnimations().forEach(a=>a.cancel());b.style.removeProperty('width');b.style.removeProperty('padding');b.style.removeProperty('opacity');b.style.removeProperty('margin-right');b.style.removeProperty('border-width')}
+ const active=filterButtons.find(b=>b.dataset.category===selected), others=filterButtons.filter(b=>b.dataset.category!=='Alles'&&b!==active);
+ if(reduced){filterButtons.forEach(b=>{b.hidden=selected!=='Alles'&&b.dataset.category!=='Alles'&&b!==active});return}
+ const expanded=b=>({width:(filterWidths.get(b)||100)+'px',paddingLeft:'16px',paddingRight:'16px',marginRight:'8px',borderWidth:'1px',opacity:1,transform:'scale(1)'});
+ const collapsed={width:'0px',paddingLeft:'0px',paddingRight:'0px',marginRight:'0px',borderWidth:'0px',opacity:0,transform:'scale(.35)'};
+ if(selected==='Alles'){
+  const hidden=filterButtons.filter(b=>b.hidden);hidden.forEach(b=>{b.hidden=false;Object.assign(b.style,collapsed)});
+  await Promise.all(hidden.map(async(b,i)=>{const a=b.animate([collapsed,expanded(b)],{duration:130,delay:i*30,easing:'ease-out',fill:'both'});try{await a.finished}catch{}if(run===filterRun){a.cancel();b.removeAttribute('style')}}));
+ }else{
+  active.hidden=false;
+  // Start at the neighbour to the selected pill, then eat toward Alles.
+  const index=filterButtons.indexOf(active);
+  const order=[...others.filter(b=>filterButtons.indexOf(b)<index).reverse(),...others.filter(b=>filterButtons.indexOf(b)>index)];
+  for(const b of order){if(run!==filterRun)return;if(b.hidden)continue;b.setAttribute('aria-hidden','true');const a=b.animate([expanded(b),collapsed],{duration:110,easing:'ease-in',fill:'both'});try{await a.finished}catch{}if(run!==filterRun)return;b.hidden=true;a.cancel();b.removeAttribute('style');b.removeAttribute('aria-hidden')}
+ }
+ if(run===filterRun)filterButtons.forEach(b=>{b.removeAttribute('aria-hidden');b.removeAttribute('style')});
+}
 const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 function matches(){return all().filter(x=>(category==='Alles'||x.category===category)&&(!onlySaved||saved.has(x.slug))&&(!quick||x.quick)&&normalize([x.title,x.description,x.category,x.tags||''].join(' ')).includes(normalize(query)))}
 function render(){const list=matches();$('#saved-count').textContent=all().filter(x=>saved.has(x.slug)).length;$('#saved-nav').setAttribute('aria-pressed',onlySaved);document.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.category===category));$('#result-note').textContent=`${list.length} ${onlySaved?'bewaarde ':''}ideeën${category!=='Alles'?' · '+category:''}${quick?' · weinig tijd':''}`;$('#empty').hidden=!!list.length;$('#grid').innerHTML=list.map((x,index)=>{const c=categories.find(c=>c[0]===x.category);return `<article class="idea-card"><div class="card-visual" style="--color:${c[3]}">${x.photo?`<img src="${x.photo}" alt="${x.photoAlt?esc(x.photoAlt):x.slug==='preischotel-blauwe-kaas-walnoten'?esc(x.title):'Sfeerbeeld bij het recept'}" loading="lazy">`:`<span class="art" aria-hidden="true">${x.icon||c[2]}</span>`}<span class="author-tag" style="background:${['#f782b9','#8ed1f5','#ffc247','#dfea9c','#c8b5ee','#ffb49c'][index%6]}">${x.country?'<span class="country-tag">'+esc(x.country)+'</span>':''}${esc(x.author)}</span><span class="visual-caption">${x.photoCredit?esc(x.photoCredit):x.example?'Voorbeeldtip':x.local?'Jouw lokale idee':x.slug==='preischotel-blauwe-kaas-walnoten'?'Uit het receptenatelier':'Recept · sfeerbeeld'}</span></div><button class="save" data-save="${esc(x.slug)}" aria-pressed="${saved.has(x.slug)}" aria-label="${saved.has(x.slug)?'Verwijder':'Bewaar'} ${esc(x.title)}">${saved.has(x.slug)?'♥':'♡'}</button><div class="card-body"><div class="card-meta"><span>${x.category}</span><span>${x.country?'':'◷ '}${esc(x.time)}</span></div><h3><a href="${x.slug==='armalygal'?'/camping.html':'#idee/'+encodeURIComponent(x.slug)}">${esc(x.title)}</a></h3></div></article>`}).join('')}
-function reset(){category='Alles';query='';onlySaved=false;quick=false;$('#search').value='';$('#sort').value='default';render()}
-document.addEventListener('click',e=>{let b=e.target.closest('[data-category],[data-save],[data-share]');if(!b)return;if(b.hasAttribute('data-category')){category=b.dataset.category;render();$('#ontdek').scrollIntoView({behavior:'smooth'})}if(b.hasAttribute('data-save')){const id=b.dataset.save;saved.has(id)?saved.delete(id):saved.add(id);persist('bb-favorites',[...saved]);render()}if(b.hasAttribute('data-share'))share()});
+function reset(){animateFilters('Alles');category='Alles';query='';onlySaved=false;quick=false;$('#search').value='';$('#sort').value='default';render()}
+document.addEventListener('click',e=>{let b=e.target.closest('[data-category],[data-save],[data-share]');if(!b)return;if(b.hasAttribute('data-category')){category=b.dataset.category;animateFilters(category);render();$('#ontdek').scrollIntoView({behavior:'smooth'})}if(b.hasAttribute('data-save')){const id=b.dataset.save;saved.has(id)?saved.delete(id):saved.add(id);persist('bb-favorites',[...saved]);render()}if(b.hasAttribute('data-share'))share()});
 $('#search').addEventListener('input',e=>{query=e.target.value;render()});$('#sort').addEventListener('change',e=>{quick=e.target.value==='quick';render()});$('#saved-nav').onclick=()=>{onlySaved=!onlySaved;render();$('#ontdek').scrollIntoView()};$('#reset').onclick=reset;
 const modal=$('#modal');let returnFocus;
 function show(html){returnFocus=document.activeElement;$('#modal-content').innerHTML=html;if(!modal.open)modal.showModal()}

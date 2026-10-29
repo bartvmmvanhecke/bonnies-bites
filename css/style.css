@@ -24,3 +24,6 @@ body{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fw
 .idea-card .save,.idea-card .visual-caption{color:#19395f}.idea-card .save[aria-pressed=true]{color:#b93670}
 
 .categories{grid-template-columns:repeat(5,minmax(0,1fr))}.country-tag{display:inline-block;margin-right:8px;padding-right:8px;border-right:1px solid #19395f55}@media(max-width:900px){.categories{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:600px){.categories{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Sequential eating/reopening motion for category pills. */
+.filters{gap:8px 0}.filters button{flex-shrink:0;margin-right:8px;white-space:nowrap;overflow:hidden;transform-origin:right center;box-sizing:border-box}.filters button:last-child{margin-right:0}
