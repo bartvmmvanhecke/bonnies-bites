@@ -13,6 +13,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        camping: resolve(import.meta.dirname, 'camping.html'),
         main: resolve(import.meta.dirname, 'index.html'),
         recipe: resolve(import.meta.dirname, 'recipe.html'),
       },
