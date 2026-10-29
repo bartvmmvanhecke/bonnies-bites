@@ -15,7 +15,7 @@ if(!idea){renderContent('<h1>Dit idee vinden we even niet.</h1><p>Het kan verwij
 else{
 idea=enrichIdea(idea);idea={...idea,category:idea.category==='Kleine gelukjes'?'Cadeautips':idea.category};document.title=idea.title+' — Bonnie’s Bites';detail(idea);
 if(!idea.photos?.length){if(idea.photo){const wrap=document.createElement('div');wrap.className='detail-photos';const img=document.createElement('img');img.src=idea.photo;img.alt=idea.photoAlt||'Sfeerbeeld bij '+idea.title;wrap.append(img);$('#idea-title').after(wrap)}else{const art=document.createElement('div');art.className='idea-placeholder';art.setAttribute('aria-hidden','true');art.textContent=idea.icon||categories.find(c=>c[0]===idea.category)?.[2]||'✳';$('#idea-title').after(art)}}
-renderResearch(idea);arrangeDetail();$('#share-related').href='/?deel='+encodeURIComponent(idea.category);
+renderResearch(idea);arrangeDetail();addDetailActions(idea);$('#share-related').href='/?deel='+encodeURIComponent(idea.category);
 }
 }catch{renderContent('<h1>Even geen verbinding.</h1><p>We konden dit idee niet laden. Probeer de pagina opnieuw te openen.</p>')}
 
@@ -41,4 +41,11 @@ function arrangeDetail(){
  else{const addressLink=copy.querySelector('.research-section > a.primary');if(addressLink){const panel=document.createElement('section');panel.className='map-panel';const title=document.createElement('h3');title.textContent='Waar ligt het?';panel.append(title,addressLink);aside.append(panel)}}
  const suggest=$('.idea-page > .suggest-panel');if(suggest)aside.append(suggest);
  columns.append(copy,aside);content.append(columns);
+}
+
+function addDetailActions(idea){
+ const heading=$('#idea-title'),row=document.createElement('div'),actions=document.createElement('div');row.className='idea-title-row';actions.className='detail-actions';
+ const been=document.createElement('button');been.type='button';been.className='been-button';been.textContent=idea.recipe||idea.category==='Koken'?'Heb ik ook al gemaakt!':'Hier ben ik ook al geweest!';
+ const like=document.createElement('button');like.type='button';like.className='primary';const key='bb-like-'+idea.slug;let liked=!!read(key,false);const update=()=>{like.textContent=liked?'♥ Vind ik leuk · 1':'♡ Vind ik leuk';like.setAttribute('aria-pressed',liked)};update();like.onclick=()=>{liked=!liked;persist(key,liked);update()};
+ actions.append(been,like);heading.before(row);row.append(heading,actions);
 }
