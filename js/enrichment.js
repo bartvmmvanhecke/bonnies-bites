@@ -1,0 +1,11 @@
+// Reviewed source information. New entries can also come from ideas.enrichment in Supabase.
+const gandins={checkedAt:'2026-10-29',name:'Domaine les Gandins',location:'Saint-Germain-de-Salles · Auvergne · Frankrijk',address:'1, Allée des Gandins, 03140 Saint-Germain-de-Salles, Frankrijk',type:'Kleinschalige natuurcamping op een landgoed',coordinates:{lat:46.193278,lon:3.24325},photos:['/assets/gandins-camping.jpg','/assets/gandins-pool.jpg','/assets/gandins-river.jpg'],photoCredit:'Domaine les Gandins · officiële website',facilities:['Verwarmd zwembad','Speelruimtes, kinderfietsen en skelters','Broodservice','Table d’hôtes','WiFi','Warme douches, toiletten en drinkwaterpunten','Wasmachine','Privébadkamer en koelkast te huur tegen extra kosten','Rivier de Sioule bij het domein'],practical:['Volgens de campingpagina zijn huisdieren niet toegestaan.','De website noemt april tot september voor kamperen. Vraag de actuele openingsdata rechtstreeks na.','Voor hoogseizoenreserveringen noemt de website minimaal zeven dagen. Controleer dit bij je aanvraag.'],sources:[{title:'Domaine les Gandins — officiële website',url:'https://www.domainelesgandins.com/index.php/nl/'},{title:'Camping, voorzieningen en voorwaarden',url:'https://www.domainelesgandins.com/index.php/nl/verhuur-camping/camping'}]};
+function safeLink(v){try{const u=new URL(v);return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}}
+export function enrichIdea(idea){let hostname='';try{hostname=new URL(idea.link).hostname.replace(/^www\./,'')}catch{}
+const reviewed=hostname==='domainelesgandins.com'?gandins:null;
+const fromDatabase=idea.row?.enrichment||{};
+const info=reviewed||fromDatabase;
+const photos=Array.isArray(info.photos)?info.photos.map(p=>typeof p==='string'?p:p?.url).filter(p=>typeof p==='string'&&(p.startsWith('/assets/')||safeLink(p))):[];
+return {...idea,research:Object.keys(info).length?info:null,enrich:!Object.keys(info).length&&idea.enrich,photos:[...new Set([...(idea.photos||[]),...photos])],photo:idea.photo||photos[0],photoAlt:idea.photoAlt||idea.title,needsIdentity:idea.slug==='idee-c942b0ff-b981-42f5-8c38-61ac5f2f5522'};
+}
+export {safeLink};
