@@ -12,6 +12,7 @@
       "id": "H01",
       "slug": "preischotel-blauwe-kaas-walnoten",
       "category": "Hoofdgerecht",
+      "image": "assets/preischotel_blauwekaas_walnoot.jpeg",
       "title": "Preischotel met blauwe kaas en walnoten",
       "description": "Een romige ovenschotel waarbij de zachte, gekarameliseerde prei perfect in balans is met de pittige blauwe kaas. De walnoten zorgen voor een krokante tegenhanger.",
       "meta": {
@@ -83,6 +84,54 @@
         { "label": "Cremaceto", "tekst": "Geen cremaceto? Vervang door een scheutje balsamicoazijn met een beetje honing." },
         { "label": "Serveren", "tekst": "Lekker als voorgerecht met wat geroosterd brood erbij." },
         { "label": "Bron", "tekst": "Origineel recept: AH Allerhande (ah.nl)." }
+      ]
+    },
+    {
+      "id": "H02",
+      "slug": "tagliatelle-walnotensaus-champignons-gremolata",
+      "category": "Hoofdgerecht",
+      "title": "Tagliatelle met walnotensaus, champignons en gremolata",
+      "description": "Romige, nootachtige pasta (naar de Ligurische salsa di noci) met gebakken champignons voor extra bite en een frisse peterselie-gremolata voor kleur en tegengewicht.",
+      "meta": {
+        "bereidingstijd": "30 min",
+        "porties": "4 personen",
+        "moeilijkheid": "Makkelijk"
+      },
+      "ingredients": [
+        { "amount": "350 g", "naam": "tagliatelle" },
+        { "amount": "200 g", "naam": "walnoten (150 g voor de saus, 50 g grof gehakt als topping)" },
+        { "amount": "250 g", "naam": "kastanjechampignons, in vieren" },
+        { "amount": "1 el", "naam": "boter (voor de champignons)" },
+        { "amount": "1 sneetje", "naam": "witbrood, korst verwijderd" },
+        { "amount": "50 ml", "naam": "melk" },
+        { "amount": "1 teentje", "naam": "knoflook (voor de saus)" },
+        { "amount": "50 g", "naam": "oude Parmezaan of Grana Padano, geraspt" },
+        { "amount": "4 el", "naam": "extra vierge olijfolie" },
+        { "amount": "100 ml", "naam": "volle room" },
+        { "amount": "1 el", "naam": "boter (voor de saus)" },
+        { "amount": "1 tl", "naam": "verse marjolein of tijm" },
+        { "amount": "–", "naam": "zout en versgemalen peper" },
+        { "amount": "15 g", "naam": "platte peterselie, fijngehakt (gremolata)" },
+        { "amount": "1 stuk", "naam": "citroen, zeste (gremolata)" },
+        { "amount": "½ teentje", "naam": "knoflook, zeer fijn gehakt (gremolata)" }
+      ],
+      "stappen": [
+        { "titel": "Roosteren", "tekst": "Rooster alle walnoten 4–5 minuten in een droge pan op middelhoog vuur, tot ze geuren. Leg 50 g apart voor de topping." },
+        { "titel": "Champignons bakken", "tekst": "Bak de champignons in de boter op hoog vuur tot goudbruin, 5–6 minuten. Zout pas op het einde, anders laten ze te veel vocht. Zet apart." },
+        { "titel": "Saus mixen", "tekst": "Week het brood in de melk en knijp uit. Mix het met 150 g walnoten, de knoflook, 30 g Parmezaan, de olijfolie, marjolein, zout en peper tot een grove pasta." },
+        { "titel": "Pasta koken", "tekst": "Kook de tagliatelle al dente en bewaar 150 ml kookwater." },
+        { "titel": "Gremolata maken", "tekst": "Meng de peterselie, citroenzeste en fijngehakte knoflook in een kommetje. Zet apart tot het serveren." },
+        { "titel": "Saus verwarmen", "tekst": "Smelt de boter in een brede pan. Voeg de walnotenpasta, de room en een scheut kookwater toe. Verwarm zachtjes zonder te laten koken." },
+        { "titel": "Mengen", "tekst": "Schep de pasta en de champignons door de saus en voeg zo nodig kookwater toe tot ze glanzend en zijdeachtig is." },
+        { "titel": "Serveren", "tekst": "Verdeel over de borden en werk af met de gehakte walnoten, de rest van de Parmezaan en een flinke lepel gremolata voor de kleur." }
+      ],
+      "tips": [
+        { "label": "Bitter?", "tekst": "Oude of ranzige walnoten geven een bittere saus. Proef ze vooraf en gebruik verse." },
+        { "label": "Champignons", "tekst": "Kastanjechampignons geven de meeste smaak; gewone champignons of een mix met eekhoorntjesbrood kan ook." },
+        { "label": "Gremolata", "tekst": "Maak vlak voor het serveren — peterselie verkleurt en verliest frisheid als het blijft staan." },
+        { "label": "Groenten", "tekst": "Roer een handvol spinazie of gegrilde courgette door de saus." },
+        { "label": "Vegan", "tekst": "Vervang room door havercuisine of extra kookwater, en gebruik gistvlokken in plaats van Parmezaan." },
+        { "label": "Wijn erbij", "tekst": "Een frisse witte, zoals Vermentino of Pinot Grigio." }
       ]
     }
   ]
