@@ -6,7 +6,7 @@ create table if not exists public.ideas (
   created_at timestamptz not null default now(),
   author_id uuid not null default auth.uid() references auth.users on delete cascade,
   author_name text not null check (char_length(author_name) between 1 and 40),
-  category text not null check (category in ('Koken', 'Met de kids', 'Eropuit', 'Kleine gelukjes', 'Campings')),
+  category text not null check (category in ('Koken', 'Met de kids', 'Eropuit', 'Kleine gelukjes', 'Campings', 'Restaurant')),
   region text check (char_length(region) <= 40),
   title text not null check (char_length(title) between 1 and 90),
   description text check (char_length(description) <= 400),

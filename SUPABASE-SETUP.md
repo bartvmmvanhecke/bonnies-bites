@@ -46,3 +46,7 @@ Nieuwe ideeën komen binnen als `pending`. Alleen wie het deelde, ziet ze dan al
 - Een week geen verkeer naar de database → Supabase pauzeert het project. Je krijgt een mail en heractiveert met één klik.
 - Ruim voldoende om te starten: 500 MB database en ± 1 GB foto’s. Foto’s worden op het toestel al verkleind tot ± 60–100 KB.
 - Kijk de actuele limieten na op [supabase.com/pricing](https://supabase.com/pricing).
+
+## Categorie Restaurant toevoegen
+
+Voer `supabase/migrations/20261029010000_restaurant_category.sql` uit in de Supabase SQL Editor. Deze verruimt alleen de toegestane categorieën; bestaande ideeën blijven behouden. ‘Cadeautips’ is de nieuwe schermnaam van ‘Kleine gelukjes’: de bestaande databasewaarde blijft ondersteund.
