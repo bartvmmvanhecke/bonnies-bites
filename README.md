@@ -42,3 +42,9 @@ De WhatsApp-kaart staat na de eerste twee tips in hetzelfde mozaïek (na de eers
 ## Formulier voor idee toevoegen
 
 Het oorspronkelijke uitgebreide formulier is terug: categoriepillen, optioneel inspreken, titel, omschrijving, foto’s, link en voornaam. Alleen de titel is verplicht; ook een korte titel zonder URL blijft mogelijk. Opslaan gaat eerst naar de privé-Inbox. De WhatsApp-demo behoudt de korte berichtinvoer. Het websiteformulier en bewaren van categorie/omschrijving zijn in de browser gecontroleerd.
+
+## Vernieuwde detailpagina’s
+
+Fotohero met dezelfde tags als de overzichtskaart, gedeelde bewaaractie, delen via gekopieerde link en lokale ervaringen. Armalygal heeft een voorbeeldavatar (AI, geen echte foto van Anke en Bart), praktische info boven de kaart en een horizontale fotogalerij met lightbox. De reacties zijn een eenvoudige lokale chat: bij typen verschijnt voor gasten een verplicht naamveld en een profiel-link die voorlopig alleen een melding toont. Bestaande lokale reacties blijven behouden.
+
+Productiebuild en Inbox-tests slagen; galerie/lichtbox en gastchat met bewaren na herladen zijn in de browser gecontroleerd. Review-screenshots blijven lokale bestanden en zijn uitgesloten van Git.
