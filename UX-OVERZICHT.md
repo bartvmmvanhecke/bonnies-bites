@@ -1,3 +1,5 @@
+> Update 30 oktober 2026: de nieuwe private Inbox-flow en actuele validatie staan in [README.md](README.md). De onderstaande community-preview beschrijft de eerdere flow; nieuwe bijdragen gaan nu eerst naar de lokale Inbox.
+
 # Bonnie’s Bites — community-preview
 
 Branch: `ux/community-inspiratie` in de geïsoleerde werkkopie `work/bonnies-bites`.
